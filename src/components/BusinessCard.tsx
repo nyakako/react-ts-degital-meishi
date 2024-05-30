@@ -10,14 +10,13 @@
 	Stack,
 	Text,
 } from "@chakra-ui/react";
-import DOMPurify from "dompurify";
-import parse from "html-react-parser";
 import { FC, useEffect, useState } from "react";
 import { SiGithub, SiQiita, SiX } from "react-icons/si";
 import { useParams } from "react-router-dom";
 import { User } from "../domain/user";
 import { getUserAndSkills } from "../utils/supabaseFunctions";
 import { LoadingSpinner } from "./LoadingSpinner";
+import SanitizedComponent from "./SanitizedComponent";
 
 export const BusinessCard: FC = () => {
 	const { id } = useParams<{ id: string }>();
@@ -61,8 +60,7 @@ export const BusinessCard: FC = () => {
 								<Box>
 									<Heading size="m">自己紹介：</Heading>
 									<Text pt="2" fontSize="s">
-										{parse(DOMPurify.sanitize(userData.description))}
-										{parse(userData.description)}
+										<SanitizedComponent html={userData.description} />
 									</Text>
 								</Box>
 								<Box>

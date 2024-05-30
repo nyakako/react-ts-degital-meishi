@@ -1,5 +1,5 @@
 import DangerouslySanitizedComponent from "./components/DangerouslySanitizedComponent";
-import ParserSanitizedComponent from "./components/ParserSanitizedComponent";
+import SanitizedComponent from "./components/SanitizedComponent";
 
 function App() {
 	const testInputs = [
@@ -17,7 +17,7 @@ function App() {
 				<div key={index}>
 					<h3>Test {index + 1}</h3>
 					<DangerouslySanitizedComponent html={input} />
-					<ParserSanitizedComponent html={input} />
+					<SanitizedComponent html={input} />
 				</div>
 			))}
 			
