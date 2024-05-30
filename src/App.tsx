@@ -1,37 +1,26 @@
-import { Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { LoadingSpinner } from "./components/LoadingSpinner";
-import { fetchUsers } from "./utils/supabaseFunctions";
+import DangerouslySanitizedComponent from "./components/DangerouslySanitizedComponent";
+import ParserSanitizedComponent from "./components/ParserSanitizedComponent";
 
 function App() {
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		const getAllUsers = async () => {
-			setIsLoading(true);
-			fetchUsers()
-				.then((data) => {
-					console.log(data);
-				})
-				.catch((error) => {
-					console.log(error.message);
-				})
-				.finally(() => {
-					setIsLoading(false);
-				});
-		};
-		getAllUsers();
-	}, []);
-
-	if (isLoading) {
-		return <LoadingSpinner />;
-	}
+	const testInputs = [
+		"<script>alert('XSS');</script>",
+		'<img src="x" onerror="alert(\'XSS\')" />',
+		"<a href=\"javascript:alert('XSS')\">Click me</a>",
+		"<div style=\"background: url(javascript:alert('XSS'))\">Test</div>",
+		"<<script>alert('XSS');//</script>",
+	];
 
 	return (
 		<>
-			<h1>Hello World</h1>
-			<h2>github test</h2>
-			<Button colorScheme="blue">Button</Button>
+			<h2>Sanitization Test</h2>
+			{testInputs.map((input, index) => (
+				<div key={index}>
+					<h3>Test {index + 1}</h3>
+					<DangerouslySanitizedComponent html={input} />
+					<ParserSanitizedComponent html={input} />
+				</div>
+			))}
+			
 		</>
 	);
 }

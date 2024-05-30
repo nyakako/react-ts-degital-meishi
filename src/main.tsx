@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.tsx";
-import { BussinessCard } from "./components/BussinessCard.tsx";
+import { BusinessCard } from "./components/BusinessCard.tsx";
 import theme from "./theme/theme.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<App />} />
-					<Route path="cards/:id" element={<BussinessCard />} />
+					<Route path="cards/:id" element={<BusinessCard />} />
 				</Routes>
 			</BrowserRouter>
 		</ChakraProvider>
