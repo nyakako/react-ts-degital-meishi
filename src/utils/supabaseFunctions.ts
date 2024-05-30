@@ -22,6 +22,21 @@ export async function fetchUsers() {
 		});
 }
 
+export async function fetchSkills() {
+	return supabase
+		.from("skills")
+		.select("*")
+		.then((response) => {
+			if (response.error) {
+				throw new Error(
+					`データの取得に失敗しました: ${response.error.message}`
+				);
+			}
+
+			return response.data;
+		});
+}
+
 // export async function getUserSkills(id: string) {
 // 	return supabase
 // 		.from("user_skill")
