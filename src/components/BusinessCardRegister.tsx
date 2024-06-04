@@ -15,44 +15,77 @@
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { fetchSkills } from "../utils/supabaseFunctions";
+import { useMessage } from "../hooks/useMessage";
+import { fetchSkills, insertUserDetail } from "../utils/supabaseFunctions";
 import { LoadingSpinner } from "./LoadingSpinner";
 
-type Skill = {
-	id: string;
+type FormData = {
+	userId: string;
 	name: string;
-	created_at: string;
+	description: string;
+	githubId?: string;
+	qiitaId?: string;
+	xId?: string;
+	skill: number[];
 };
 
 export const BusinessCardRegister: FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [skillData, setSkillData] = useState<Skill[]>([]);
+	const [skillData, setSkillData] = useState<{ id: number; name: string }[]>(
+		[]
+	);
+
+	const { showMessage } = useMessage();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm();
+	} = useForm<FormData>();
 
 	useEffect(() => {
 		const getAllSkills = async () => {
 			setIsLoading(true);
-			fetchSkills()
-				.then((data) => {
-					console.log(data);
-					setSkillData(data);
-				})
-				.catch((error) => {
-					console.log(error.message);
-				})
-				.finally(() => {
-					setIsLoading(false);
+			const { data, error } = await fetchSkills();
+			if (error) {
+				showMessage({
+					title: "スキルの取得に失敗しました",
+					status: "error",
 				});
+				setIsLoading(false);
+				return;
+			}
+			setSkillData(data || []);
+			setIsLoading(false);
 		};
 		getAllSkills();
-	}, []);
+	}, [showMessage]);
 
-	const onSubmit = () => {};
+	const onSubmit = async (fieldValues: FormData) => {
+		setIsLoading(true);
+		const userData: FormData = {
+			userId: fieldValues.userId,
+			name: fieldValues.name,
+			description: fieldValues.description,
+			githubId: fieldValues.githubId,
+			qiitaId: fieldValues.qiitaId,
+			xId: fieldValues.xId,
+			skill: fieldValues.skill,
+		};
+		insertUserDetail(userData)
+			.then(() => {
+				showMessage({
+					title: "登録しました",
+					status: "success",
+				});
+			})
+			.catch((error) => {
+				alert(error.message);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	};
 
 	if (isLoading) {
 		return <LoadingSpinner />;
