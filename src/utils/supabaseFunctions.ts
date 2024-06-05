@@ -1,13 +1,13 @@
 ﻿import { User } from "../domain/user";
 import { supabase } from "./supabase";
 
-interface user {
-	userId: string;
+interface UserFormData {
+	user_id: string;
 	name: string;
 	description: string;
-	githubId?: string;
-	qiitaId?: string;
-	xId?: string;
+	github_id?: string;
+	qiita_id?: string;
+	x_id?: string;
 }
 
 interface UserSkill {
@@ -22,7 +22,7 @@ export const fetchSkills = async () => {
 	return { data, error };
 };
 
-export const insertUserDetail = async (userData: user) => {
+export const insertUserDetail = async (userData: UserFormData) => {
 	const { data, error } = await supabase
 		.from("users")
 		.insert([userData])
@@ -31,19 +31,12 @@ export const insertUserDetail = async (userData: user) => {
 };
 
 export const insertUserSkills = async (userId: string, skillIds: number[]) => {
-	const { error } = await supabase
-		.from("user_skill")
-		.insert(
-			skillIds.map((skillId) => ({ user_id: userId, skill_id: skillId }))
-		);
-	return { error };
-};
+	const skillsArray = Array.isArray(skillIds) ? skillIds : [skillIds];
 
-export const addUserSkills = async (userId: string, skillIds: number[]) => {
 	const { error } = await supabase
 		.from("user_skill")
 		.insert(
-			skillIds.map((skillId) => ({ user_id: userId, skill_id: skillId }))
+			skillsArray.map((skillId) => ({ user_id: userId, skill_id: skillId }))
 		);
 	return { error };
 };
@@ -61,7 +54,7 @@ export const fetchUserDetails = async (userId: string) => {
 		.single();
 
 	if (data) {
-		const skills = data.user_skill.map((skill) => skill.skills.name);
+		const skills = data.user_skill.map((skill: UserSkill) => skill.skills.name);
 		const user = new User(
 			data.user_id,
 			data.name,

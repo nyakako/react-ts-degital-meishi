@@ -15,17 +15,22 @@
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useMessage } from "../hooks/useMessage";
-import { fetchSkills, insertUserDetail } from "../utils/supabaseFunctions";
+import {
+	fetchSkills,
+	insertUserDetail,
+	insertUserSkills,
+} from "../utils/supabaseFunctions";
 import { LoadingSpinner } from "./LoadingSpinner";
 
-type FormData = {
-	userId: string;
+type UserRegisterForm = {
+	user_id: string;
 	name: string;
 	description: string;
-	githubId?: string;
-	qiitaId?: string;
-	xId?: string;
+	github_id?: string;
+	qiita_id?: string;
+	x_id?: string;
 	skill: number[];
 };
 
@@ -34,14 +39,16 @@ export const BusinessCardRegister: FC = () => {
 	const [skillData, setSkillData] = useState<{ id: number; name: string }[]>(
 		[]
 	);
+	const navigate = useNavigate();
 
 	const { showMessage } = useMessage();
 
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors, isSubmitting },
-	} = useForm<FormData>();
+	} = useForm<UserRegisterForm>();
 
 	useEffect(() => {
 		const getAllSkills = async () => {
@@ -61,30 +68,50 @@ export const BusinessCardRegister: FC = () => {
 		getAllSkills();
 	}, [showMessage]);
 
-	const onSubmit = async (fieldValues: FormData) => {
+	const onSubmit = async (fieldValues: UserRegisterForm) => {
 		setIsLoading(true);
-		const userData: FormData = {
-			userId: fieldValues.userId,
-			name: fieldValues.name,
-			description: fieldValues.description,
-			githubId: fieldValues.githubId,
-			qiitaId: fieldValues.qiitaId,
-			xId: fieldValues.xId,
-			skill: fieldValues.skill,
-		};
-		insertUserDetail(userData)
-			.then(() => {
-				showMessage({
-					title: "登録しました",
-					status: "success",
-				});
-			})
-			.catch((error) => {
-				alert(error.message);
-			})
-			.finally(() => {
-				setIsLoading(false);
+		const { user_id, name, description, github_id, qiita_id, x_id, skill } =
+			fieldValues;
+		const { data: userData, error: userError } = await insertUserDetail({
+			user_id,
+			name,
+			description,
+			github_id,
+			qiita_id,
+			x_id,
+		});
+
+		if (userError) {
+			showMessage({
+				title: "ユーザーの登録に失敗しました",
+				status: "error",
 			});
+			setIsLoading(false);
+			return;
+		}
+
+		if (userData && userData.length > 0) {
+			const user_id = userData[0].user_id;
+
+			const { error: userSkillError } = await insertUserSkills(user_id, skill);
+
+			if (userSkillError) {
+				showMessage({
+					title: "スキルの登録に失敗しました",
+					status: "error",
+				});
+				setIsLoading(false);
+				return;
+			}
+		}
+
+		showMessage({
+			title: "ユーザーが正常に登録されました",
+			status: "success",
+		});
+		setIsLoading(false);
+		reset();
+		navigate("/");
 	};
 
 	if (isLoading) {
@@ -99,11 +126,11 @@ export const BusinessCardRegister: FC = () => {
 						<CardHeader>名刺新規登録</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
-								<FormControl isInvalid={!!errors.userId}>
+								<FormControl isInvalid={!!errors.user_id}>
 									<FormLabel>ID（好きな英単語） *</FormLabel>
 									<Input
 										placeholder="coffee"
-										{...register("userId", {
+										{...register("user_id", {
 											required: "IDの入力は必須です",
 											pattern: {
 												value: /[A-Za-z]{3}/,
@@ -112,8 +139,8 @@ export const BusinessCardRegister: FC = () => {
 										})}
 									/>
 									<FormErrorMessage>
-										{errors.userId && errors.userId.message
-											? errors.userId.message.toString()
+										{errors.user_id && errors.user_id.message
+											? errors.user_id.message.toString()
 											: null}
 									</FormErrorMessage>
 								</FormControl>
@@ -148,7 +175,7 @@ export const BusinessCardRegister: FC = () => {
 								<FormControl isInvalid={!!errors.skill}>
 									<FormLabel>好きな技術 *</FormLabel>
 									<Select
-										// multiple
+										multiple
 										placeholder=""
 										{...register("skill", {
 											required: "内容の入力は必須です",
@@ -168,12 +195,7 @@ export const BusinessCardRegister: FC = () => {
 								</FormControl>
 								<FormControl>
 									<FormLabel>GitHub ID</FormLabel>
-									<Input
-										placeholder=""
-										// {...register("title", {
-										// 	required: "内容の入力は必須です",
-										// })}
-									/>
+									<Input placeholder="" {...register("github_id", {})} />
 									<FormErrorMessage>
 										{/* {errors.title && errors.title.message
 										? errors.title.message.toString()
@@ -182,12 +204,7 @@ export const BusinessCardRegister: FC = () => {
 								</FormControl>
 								<FormControl>
 									<FormLabel>Qiita ID</FormLabel>
-									<Input
-										placeholder=""
-										// {...register("title", {
-										// 	required: "内容の入力は必須です",
-										// })}
-									/>
+									<Input placeholder="" {...register("qiita_id", {})} />
 									<FormErrorMessage>
 										{/* {errors.title && errors.title.message
 										? errors.title.message.toString()
@@ -196,12 +213,7 @@ export const BusinessCardRegister: FC = () => {
 								</FormControl>
 								<FormControl>
 									<FormLabel>X ID</FormLabel>
-									<Input
-										placeholder="@不要"
-										// {...register("title", {
-										// 	required: "内容の入力は必須です",
-										// })}
-									/>
+									<Input placeholder="@不要" {...register("x_id", {})} />
 									<FormErrorMessage>
 										{/* {errors.title && errors.title.message
 										? errors.title.message.toString()
