@@ -14,36 +14,42 @@ import { FC, useEffect, useState } from "react";
 import { SiGithub, SiQiita, SiX } from "react-icons/si";
 import { useParams } from "react-router-dom";
 import { User } from "../domain/user";
-import { getUserAndSkills } from "../utils/supabaseFunctions";
+import { useMessage } from "../hooks/useMessage";
+import { fetchUserDetails } from "../utils/supabaseFunctions";
 import { LoadingSpinner } from "./LoadingSpinner";
 import SanitizedComponent from "./SanitizedComponent";
 
 export const BusinessCard: FC = () => {
-	const { id } = useParams<{ id: string }>();
+	const { user_id } = useParams<{ user_id: string }>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [userData, setUserData] = useState<User | null>(null);
 
+	const { showMessage } = useMessage();
+
 	useEffect(() => {
-		const GetUserData = async (id: string) => {
-			setIsLoading(true);
-			getUserAndSkills(id)
-				.then((userData) => {
-					setUserData(userData);
-					// console.log(userData);
-				})
-				.catch((error) => {
-					console.log(error.message);
-				})
-				.finally(() => {
+		setIsLoading(true);
+		const getUserDetails = async () => {
+			if (user_id) {
+				const { user, error } = await fetchUserDetails(user_id);
+				console.log(user_id);
+				if (error) {
+					showMessage({
+						title: "スキルの取得に失敗しました",
+						status: "error",
+					});
 					setIsLoading(false);
-				});
+					return;
+				}
+
+				if (user) {
+					setUserData(user);
+					setIsLoading(false);
+				}
+			}
 		};
-		if (id) {
-			// getUserSkills(id);
-			GetUserData(id);
-			// ;
-		}
-	}, [id]);
+
+		getUserDetails();
+	}, [user_id, showMessage]);
 
 	if (isLoading) {
 		return <LoadingSpinner />;
