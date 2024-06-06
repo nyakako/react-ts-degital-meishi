@@ -1,10 +1,10 @@
 ﻿import {
 	Box,
+	Button,
 	Card,
 	CardBody,
 	CardFooter,
 	CardHeader,
-	Flex,
 	Heading,
 	IconButton,
 	Stack,
@@ -12,7 +12,7 @@
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { SiGithub, SiQiita, SiX } from "react-icons/si";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../domain/user";
 import { useMessage } from "../hooks/useMessage";
 import { fetchUserDetails } from "../utils/supabaseFunctions";
@@ -25,6 +25,7 @@ export const BusinessCard: FC = () => {
 	const [userData, setUserData] = useState<User | null>(null);
 
 	const { showMessage } = useMessage();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -51,6 +52,10 @@ export const BusinessCard: FC = () => {
 		getUserDetails();
 	}, [user_id, showMessage]);
 
+	const handleClickBack = () => {
+		navigate("/");
+	};
+
 	if (isLoading) {
 		return <LoadingSpinner />;
 	}
@@ -58,16 +63,20 @@ export const BusinessCard: FC = () => {
 	return (
 		<>
 			{userData ? (
-				<Flex h="100vh" align="center" justify="center" p={{ base: 4, md: 10 }}>
-					<Card minW="xs" key="elevated">
+				<Stack
+					spacing="4"
+					h="100vh"
+					align="center"
+					justify="center"
+					p={{ base: 4, md: 10 }}
+				>
+					<Card minW="xs" w="90%" maxW="md" key="elevated">
 						<CardHeader>{userData.name}</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
 								<Box>
 									<Heading size="m">自己紹介：</Heading>
-									<Text pt="2" fontSize="s">
-										<SanitizedComponent html={userData.description} />
-									</Text>
+									<SanitizedComponent html={userData.description} />
 								</Box>
 								<Box>
 									<Heading size="m">スキル:</Heading>
@@ -110,7 +119,16 @@ export const BusinessCard: FC = () => {
 							)}
 						</CardFooter>
 					</Card>
-				</Flex>
+					<Button
+						colorScheme="blue"
+						minW="xs"
+						w="90%"
+						maxW="md"
+						onClick={handleClickBack}
+					>
+						戻る
+					</Button>
+				</Stack>
 			) : (
 				<LoadingSpinner />
 			)}
