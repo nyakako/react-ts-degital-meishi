@@ -10,13 +10,6 @@ interface UserFormData {
 	x_id?: string;
 }
 
-interface UserSkill {
-	skill_id: number;
-	skills: {
-		name: string;
-	}[];
-}
-
 export const fetchSkills = async () => {
 	const { data, error } = await supabase.from("skills").select("id, name");
 	return { data, error };
@@ -53,8 +46,18 @@ export const fetchUserDetails = async (userId: string) => {
 		.eq("user_id", userId)
 		.single();
 
+	console.log(data);
+
 	if (data) {
-		const skills = data.user_skill.map((skill: UserSkill) => skill.skills.name);
+		const skills = data.user_skill.flatMap(
+			(item: { skills: { name: string }[]; skill_id: number }) => {
+				if (Array.isArray(item.skills)) {
+					return item.skills.map((skill) => skill.name);
+				} else {
+					return [];
+				}
+			}
+		);
 		const user = new User(
 			data.user_id,
 			data.name,

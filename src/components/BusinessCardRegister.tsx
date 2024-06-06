@@ -134,7 +134,7 @@ export const BusinessCardRegister: FC = () => {
 											required: "IDの入力は必須です",
 											pattern: {
 												value: /[A-Za-z]{3}/,
-												message: "IDは英語3文字以上で入力してください",
+												message: "IDは英字3文字以上で入力してください",
 											},
 										})}
 									/>
