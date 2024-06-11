@@ -32,7 +32,7 @@ export const BusinessCard: FC = () => {
 		const getUserDetails = async () => {
 			if (user_id) {
 				const { user, error } = await fetchUserDetails(user_id);
-				console.log(user_id);
+				// console.log(user_id);
 				if (error) {
 					showMessage({
 						title: "スキルの取得に失敗しました",
