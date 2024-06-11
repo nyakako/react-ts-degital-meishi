@@ -80,7 +80,7 @@ export const BusinessCard: FC = () => {
 								</Box>
 								<Box>
 									<Heading size="m">スキル:</Heading>
-									<Text pt="2" fontSize="s">
+									<Text aria-label="userSkills" pt="2" fontSize="s">
 										{userData.skills.join(", ")}
 									</Text>
 								</Box>

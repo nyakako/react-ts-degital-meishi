@@ -66,6 +66,7 @@ export const BusinessCardRegister: FC = () => {
 			setIsLoading(false);
 		};
 		getAllSkills();
+		// console.log(skillData);
 	}, [showMessage]);
 
 	const onSubmit = async (fieldValues: UserRegisterForm) => {
@@ -123,7 +124,7 @@ export const BusinessCardRegister: FC = () => {
 			<Flex align="center" justify="center" p={{ base: 4, md: 10 }}>
 				<Card minW="xs" key="elevated">
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<CardHeader>名刺新規登録</CardHeader>
+						<CardHeader as="h1">名刺新規登録</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
 								<FormControl isInvalid={!!errors.user_id}>
