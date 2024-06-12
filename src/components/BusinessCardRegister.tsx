@@ -150,7 +150,7 @@ export const BusinessCardRegister: FC = () => {
 									<Input
 										placeholder=""
 										{...register("name", {
-											required: "内容の入力は必須です",
+											required: "名前の入力は必須です",
 										})}
 									/>
 									<FormErrorMessage>
@@ -164,7 +164,7 @@ export const BusinessCardRegister: FC = () => {
 									<Textarea
 										placeholder="<h1>HTMLタグも使えます</h1>"
 										{...register("description", {
-											required: "内容の入力は必須です",
+											required: "自己紹介の入力は必須です",
 										})}
 									/>
 									<FormErrorMessage>
@@ -179,7 +179,7 @@ export const BusinessCardRegister: FC = () => {
 										multiple
 										placeholder=""
 										{...register("skill", {
-											required: "内容の入力は必須です",
+											required: "好きな技術の入力は必須です",
 										})}
 									>
 										{skillData.map((skill) => (

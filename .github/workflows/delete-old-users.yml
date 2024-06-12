@@ -1,0 +1,29 @@
+﻿name: Delete Old Users
+
+on:
+  schedule:
+    - cron: "0 21 * * *" # 6am JST
+  workflow_dispatch:
+
+jobs:
+  delete-old-users:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "18"
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Delete old users
+      run: run delete-old-users
+      env:
+        SUPABASE_URL: ${{secrets.SUPABASE_URL}}
+        SUPABASE_SERVICE_ROLE_KEY: ${{secrets.SUPABASE_ANON_KEY}}
+      run: node scripts/delete-old-users.js

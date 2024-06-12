@@ -5,12 +5,12 @@ import {
 	CardBody,
 	CardFooter,
 	CardHeader,
-	Flex,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
 	Heading,
 	Input,
+	Stack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,7 @@ function App() {
 
 	return (
 		<>
-			<Flex h="100vh" align="center" justify="center">
+			<Stack h="100vh" align="center" justify="center" spacing={6}>
 				<Card align="center" p={{ base: 4, md: 4 }} minW="xs" w="80%" maxW="md">
 					<Box as="form" onSubmit={handleSubmit(onSubmit)} w="100%">
 						<CardHeader>
@@ -74,7 +74,10 @@ function App() {
 						</CardFooter>
 					</Box>
 				</Card>
-			</Flex>
+				<Button variant="link" onClick={() => navigate("/cards/register")}>
+					新規登録はこちら
+				</Button>
+			</Stack>
 		</>
 	);
 }
