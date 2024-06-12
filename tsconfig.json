@@ -20,6 +20,6 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true
 	},
-	"include": ["src", "./jest.setup.ts"],
+	"include": ["src", "./jest.setup.ts", "batch"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

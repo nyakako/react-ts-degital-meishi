@@ -32,7 +32,7 @@ export const BusinessCard: FC = () => {
 		const getUserDetails = async () => {
 			if (user_id) {
 				const { user, error } = await fetchUserDetails(user_id);
-				console.log(user_id);
+				// console.log(user_id);
 				if (error) {
 					showMessage({
 						title: "スキルの取得に失敗しました",
@@ -71,7 +71,7 @@ export const BusinessCard: FC = () => {
 					p={{ base: 4, md: 10 }}
 				>
 					<Card minW="xs" w="90%" maxW="md" key="elevated">
-						<CardHeader>{userData.name}</CardHeader>
+						<CardHeader as="h1">{userData.name}</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
 								<Box>
@@ -80,7 +80,7 @@ export const BusinessCard: FC = () => {
 								</Box>
 								<Box>
 									<Heading size="m">スキル:</Heading>
-									<Text pt="2" fontSize="s">
+									<Text aria-label="userSkills" pt="2" fontSize="s">
 										{userData.skills.join(", ")}
 									</Text>
 								</Box>
@@ -95,6 +95,7 @@ export const BusinessCard: FC = () => {
 									colorScheme="gray"
 									aria-label="X Button"
 									icon={<SiX />}
+									w="30%"
 								/>
 							)}
 							{userData.qiita_id && (
@@ -105,6 +106,7 @@ export const BusinessCard: FC = () => {
 									colorScheme="green"
 									aria-label="Qiita Button"
 									icon={<SiQiita />}
+									w="30%"
 								/>
 							)}
 							{userData.github_id && (
@@ -115,6 +117,7 @@ export const BusinessCard: FC = () => {
 									colorScheme="gray"
 									aria-label="Github Button"
 									icon={<SiGithub />}
+									w="30%"
 								/>
 							)}
 						</CardFooter>

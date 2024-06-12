@@ -66,6 +66,7 @@ export const BusinessCardRegister: FC = () => {
 			setIsLoading(false);
 		};
 		getAllSkills();
+		// console.log(skillData);
 	}, [showMessage]);
 
 	const onSubmit = async (fieldValues: UserRegisterForm) => {
@@ -123,7 +124,7 @@ export const BusinessCardRegister: FC = () => {
 			<Flex align="center" justify="center" p={{ base: 4, md: 10 }}>
 				<Card minW="xs" key="elevated">
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<CardHeader>名刺新規登録</CardHeader>
+						<CardHeader as="h1">名刺新規登録</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
 								<FormControl isInvalid={!!errors.user_id}>
@@ -149,7 +150,7 @@ export const BusinessCardRegister: FC = () => {
 									<Input
 										placeholder=""
 										{...register("name", {
-											required: "内容の入力は必須です",
+											required: "名前の入力は必須です",
 										})}
 									/>
 									<FormErrorMessage>
@@ -163,7 +164,7 @@ export const BusinessCardRegister: FC = () => {
 									<Textarea
 										placeholder="<h1>HTMLタグも使えます</h1>"
 										{...register("description", {
-											required: "内容の入力は必須です",
+											required: "自己紹介の入力は必須です",
 										})}
 									/>
 									<FormErrorMessage>
@@ -178,7 +179,7 @@ export const BusinessCardRegister: FC = () => {
 										multiple
 										placeholder=""
 										{...register("skill", {
-											required: "内容の入力は必須です",
+											required: "好きな技術の入力は必須です",
 										})}
 									>
 										{skillData.map((skill) => (
