@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Delete old users
-        run: run delete-old-users
+        run: npm run delete-old-users
         env:
           SUPABASE_URL: ${{secrets.SUPABASE_URL}}
           SUPABASE_SERVICE_ROLE_KEY: ${{secrets.SUPABASE_ANON_KEY}}
