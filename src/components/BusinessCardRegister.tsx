@@ -10,12 +10,12 @@
 	FormLabel,
 	Heading,
 	Input,
-	Select,
 	Stack,
 	Textarea,
 } from "@chakra-ui/react";
+import { OptionBase, Select } from "chakra-react-select";
 import { FC, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMessage } from "../hooks/useMessage";
 import {
@@ -25,6 +25,11 @@ import {
 } from "../utils/supabaseFunctions";
 import { LoadingSpinner } from "./LoadingSpinner";
 
+type SkillOption = {
+	value: number;
+	label: string;
+} & OptionBase;
+
 type UserRegisterForm = {
 	user_id: string;
 	name: string;
@@ -32,14 +37,14 @@ type UserRegisterForm = {
 	github_id?: string;
 	qiita_id?: string;
 	x_id?: string;
-	skill: number[];
+	skill: SkillOption[];
 };
 
 export const BusinessCardRegister: FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [skillData, setSkillData] = useState<{ id: number; name: string }[]>(
-		[]
-	);
+	const [skillData, setSkillData] = useState<
+		{ value: number; label: string }[]
+	>([]);
 	const navigate = useNavigate();
 
 	const { showMessage } = useMessage();
@@ -47,6 +52,7 @@ export const BusinessCardRegister: FC = () => {
 	const {
 		register,
 		handleSubmit,
+		control,
 		reset,
 		formState: { errors, isSubmitting },
 	} = useForm<UserRegisterForm>();
@@ -63,7 +69,12 @@ export const BusinessCardRegister: FC = () => {
 				setIsLoading(false);
 				return;
 			}
-			setSkillData(data || []);
+			setSkillData(
+				(data || []).map((skill) => ({
+					value: skill.id,
+					label: skill.name,
+				}))
+			);
 			setIsLoading(false);
 		};
 		getAllSkills();
@@ -95,7 +106,10 @@ export const BusinessCardRegister: FC = () => {
 		if (userData && userData.length > 0) {
 			const user_id = userData[0].user_id;
 
-			const { error: userSkillError } = await insertUserSkills(user_id, skill);
+			const { error: userSkillError } = await insertUserSkills(
+				user_id,
+				skill.map((s) => s.value)
+			);
 
 			if (userSkillError) {
 				showMessage({
@@ -180,19 +194,19 @@ export const BusinessCardRegister: FC = () => {
 								</FormControl>
 								<FormControl isInvalid={!!errors.skill}>
 									<FormLabel>好きな技術 *</FormLabel>
-									<Select
-										multiple
-										placeholder=""
-										{...register("skill", {
-											required: "好きな技術の入力は必須です",
-										})}
-									>
-										{skillData.map((skill) => (
-											<option key={skill.id} value={skill.id}>
-												{skill.name}
-											</option>
-										))}
-									</Select>
+									<Controller
+										name="skill"
+										control={control}
+										rules={{ required: "好きな技術の入力は必須です" }}
+										render={({ field }) => (
+											<Select
+												isMulti
+												placeholder=""
+												options={skillData}
+												{...field}
+											/>
+										)}
+									/>
 									<FormErrorMessage>
 										{errors.skill && errors.skill.message
 											? errors.skill.message.toString()
