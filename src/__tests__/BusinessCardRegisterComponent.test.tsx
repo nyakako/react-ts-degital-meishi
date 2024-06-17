@@ -1,5 +1,8 @@
-﻿import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+﻿import { ChakraProvider } from "@chakra-ui/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes, useNavigate } from "react-router-dom";
+import "../__mocks__/matchMedia.ts";
 import { BusinessCardRegister } from "../components/BusinessCardRegister";
 import * as supabaseFunctions from "../utils/supabaseFunctions";
 
@@ -39,14 +42,17 @@ describe("BusinessCardRegisterComponent", () => {
 
 	test("1.タイトルが表示されている", async () => {
 		render(
-			<MemoryRouter initialEntries={["/cards/register"]}>
-				<Routes>
-					<Route path="/cards/register" element={<BusinessCardRegister />} />
-				</Routes>
-			</MemoryRouter>
+			<ChakraProvider>
+				<MemoryRouter initialEntries={["/cards/register"]}>
+					<Routes>
+						<Route path="/cards/register" element={<BusinessCardRegister />} />
+					</Routes>
+				</MemoryRouter>
+			</ChakraProvider>
 		);
 
 		await waitFor(() => {
+			// screen.debug();
 			const pageTitle = screen.getByRole("heading", { name: "名刺新規登録" });
 			expect(pageTitle).toBeInTheDocument();
 		});
@@ -57,11 +63,13 @@ describe("BusinessCardRegisterComponent", () => {
 		(useNavigate as jest.Mock).mockReturnValue(navigate);
 
 		render(
-			<MemoryRouter initialEntries={["/cards/register"]}>
-				<Routes>
-					<Route path="/cards/register" element={<BusinessCardRegister />} />
-				</Routes>
-			</MemoryRouter>
+			<ChakraProvider>
+				<MemoryRouter initialEntries={["/cards/register"]}>
+					<Routes>
+						<Route path="/cards/register" element={<BusinessCardRegister />} />
+					</Routes>
+				</MemoryRouter>
+			</ChakraProvider>
 		);
 
 		await waitFor(() => {
@@ -72,7 +80,13 @@ describe("BusinessCardRegisterComponent", () => {
 		const inputUserId = screen.getByLabelText(/ID（好きな英単語）/);
 		const inputName = screen.getByLabelText(/名前/);
 		const inputDescription = screen.getByLabelText(/自己紹介/);
-		const selectSkill = screen.getByLabelText(/好きな技術/);
+
+		const selectSkill = screen.getByRole("combobox");
+		await userEvent.click(selectSkill);
+		const option = screen.getByText("React");
+		await userEvent.click(option);
+		// screen.debug();
+
 		const inputGithubId = screen.getByLabelText(/GitHub/);
 		const inputXId = screen.getByLabelText(/X ID/);
 		const inputQiitaId = screen.getByLabelText(/Qiita/);
@@ -86,7 +100,7 @@ describe("BusinessCardRegisterComponent", () => {
 		fireEvent.change(inputDescription, {
 			target: { value: "test_description" },
 		});
-		fireEvent.change(selectSkill, { target: { value: "1" } });
+
 		fireEvent.change(inputGithubId, {
 			target: { value: "test_github_id" },
 		});
@@ -96,9 +110,8 @@ describe("BusinessCardRegisterComponent", () => {
 		fireEvent.change(inputQiitaId, {
 			target: { value: "test_qiita_id" },
 		});
-		// screen.debug();
 
-		const submitButton = screen.getByRole("button");
+		const submitButton = screen.getByRole("button", { name: "登録" });
 		await waitFor(() => {
 			fireEvent.click(submitButton);
 			expect(navigate).toHaveBeenCalledWith("/");
@@ -107,33 +120,19 @@ describe("BusinessCardRegisterComponent", () => {
 
 	test("3.ID、名前、自己紹介、好きな技術の入力がないときにエラーメッセージが表示する", async () => {
 		render(
-			<MemoryRouter initialEntries={["/cards/register"]}>
-				<Routes>
-					<Route path="/cards/register" element={<BusinessCardRegister />} />
-				</Routes>
-			</MemoryRouter>
+			<ChakraProvider>
+				<MemoryRouter initialEntries={["/cards/register"]}>
+					<Routes>
+						<Route path="/cards/register" element={<BusinessCardRegister />} />
+					</Routes>
+				</MemoryRouter>
+			</ChakraProvider>
 		);
 
 		await waitFor(() => {
 			const pageTitle = screen.getByRole("heading", { name: "名刺新規登録" });
 			expect(pageTitle).toBeInTheDocument();
 		});
-
-		// const inputUserId = screen.getByLabelText(/ID（好きな英単語）/);
-		// const inputName = screen.getByLabelText(/名前/);
-		// const inputDescription = screen.getByLabelText(/自己紹介/);
-		// const selectSkill = screen.getByLabelText(/好きな技術/);
-
-		// fireEvent.change(inputUserId, {
-		// 	target: { value: "test_id" },
-		// });
-		// fireEvent.change(inputName, {
-		// 	target: { value: "test_name" },
-		// });
-		// fireEvent.change(inputDescription, {
-		// 	target: { value: "test_description" },
-		// });
-		// fireEvent.change(selectSkill, { target: { value: "1" } });
 
 		const submitButton = screen.getByRole("button");
 		await waitFor(() => {
@@ -156,11 +155,13 @@ describe("BusinessCardRegisterComponent", () => {
 		(useNavigate as jest.Mock).mockReturnValue(navigate);
 
 		render(
-			<MemoryRouter initialEntries={["/cards/register"]}>
-				<Routes>
-					<Route path="/cards/register" element={<BusinessCardRegister />} />
-				</Routes>
-			</MemoryRouter>
+			<ChakraProvider>
+				<MemoryRouter initialEntries={["/cards/register"]}>
+					<Routes>
+						<Route path="/cards/register" element={<BusinessCardRegister />} />
+					</Routes>
+				</MemoryRouter>
+			</ChakraProvider>
 		);
 
 		await waitFor(() => {
@@ -171,7 +172,11 @@ describe("BusinessCardRegisterComponent", () => {
 		const inputUserId = screen.getByLabelText(/ID（好きな英単語）/);
 		const inputName = screen.getByLabelText(/名前/);
 		const inputDescription = screen.getByLabelText(/自己紹介/);
-		const selectSkill = screen.getByLabelText(/好きな技術/);
+
+		const selectSkill = screen.getByRole("combobox");
+		await userEvent.click(selectSkill);
+		const option = screen.getByText("React");
+		await userEvent.click(option);
 
 		fireEvent.change(inputUserId, {
 			target: { value: "test_id" },
@@ -182,10 +187,9 @@ describe("BusinessCardRegisterComponent", () => {
 		fireEvent.change(inputDescription, {
 			target: { value: "test_description" },
 		});
-		fireEvent.change(selectSkill, { target: { value: "1" } });
 		// screen.debug();
 
-		const submitButton = screen.getByRole("button");
+		const submitButton = screen.getByRole("button", { name: "登録" });
 		await waitFor(() => {
 			fireEvent.click(submitButton);
 			expect(navigate).toHaveBeenCalledWith("/");
