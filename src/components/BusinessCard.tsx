@@ -43,6 +43,7 @@ export const BusinessCard: FC = () => {
 				}
 
 				if (user) {
+					// console.log(user);
 					setUserData(user);
 					setIsLoading(false);
 				}
@@ -71,9 +72,11 @@ export const BusinessCard: FC = () => {
 					p={{ base: 4, md: 10 }}
 				>
 					<Card minW="xs" w="90%" maxW="md" key="elevated">
-						<CardHeader as="h1">{userData.name}</CardHeader>
+						<CardHeader pb={0}>
+							<Heading size="md">{userData.name}</Heading>
+						</CardHeader>
 						<CardBody>
-							<Stack spacing="4">
+							<Stack spacing={4}>
 								<Box>
 									<Heading size="m">自己紹介：</Heading>
 									<SanitizedComponent html={userData.description} />
@@ -92,10 +95,12 @@ export const BusinessCard: FC = () => {
 									as="a"
 									target="_blank"
 									href={userData.x_id}
-									colorScheme="gray"
+									backgroundColor="rgba(0,0,0)"
+									color={"white"}
 									aria-label="X Button"
 									icon={<SiX />}
 									w="30%"
+									fontSize={20}
 								/>
 							)}
 							{userData.qiita_id && (
@@ -103,9 +108,11 @@ export const BusinessCard: FC = () => {
 									as="a"
 									target="_blank"
 									href={userData.qiita_id}
-									colorScheme="green"
+									backgroundColor="#67cb1b"
+									color={"white"}
 									aria-label="Qiita Button"
 									icon={<SiQiita />}
+									fontSize={36}
 									w="30%"
 								/>
 							)}
@@ -114,9 +121,11 @@ export const BusinessCard: FC = () => {
 									as="a"
 									target="_blank"
 									href={userData.github_id}
-									colorScheme="gray"
+									backgroundColor="#010409"
+									color={"white"}
 									aria-label="Github Button"
 									icon={<SiGithub />}
+									fontSize={24}
 									w="30%"
 								/>
 							)}

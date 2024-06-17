@@ -8,6 +8,7 @@
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
+	Heading,
 	Input,
 	Select,
 	Stack,
@@ -124,7 +125,11 @@ export const BusinessCardRegister: FC = () => {
 			<Flex align="center" justify="center" p={{ base: 4, md: 10 }}>
 				<Card minW="xs" key="elevated">
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<CardHeader as="h1">名刺新規登録</CardHeader>
+						<CardHeader>
+							<Heading as="h1" size="md">
+								名刺新規登録
+							</Heading>
+						</CardHeader>
 						<CardBody>
 							<Stack spacing="4">
 								<FormControl isInvalid={!!errors.user_id}>
