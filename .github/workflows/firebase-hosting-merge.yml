@@ -4,6 +4,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+env:
+  VITE_SUPABASE_URL: ${{secrets.SUPABASE_URL}}
+  VITE_SUPABASE_ANON_KEY: ${{secrets.SUPABASE_ANON_KEY}}
 jobs:
   build:
     name: Build
@@ -16,9 +19,6 @@ jobs:
         with:
           node-version: "18"
       - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{secrets.SUPABASE_URL}}
-          VITE_SUPABASE_ANON_KEY: ${{secrets.SUPABASE_ANON_KEY}}
         run: npm ci && npm run build
 
   test:
@@ -33,9 +33,6 @@ jobs:
         with:
           node-version: "18"
       - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{secrets.SUPABASE_URL}}
-          VITE_SUPABASE_ANON_KEY: ${{secrets.SUPABASE_ANON_KEY}}
         run: npm ci && npm run build
       - name: Test
         run: npm run test
@@ -52,9 +49,6 @@ jobs:
         with:
           node-version: "18"
       - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{secrets.SUPABASE_URL}}
-          VITE_SUPABASE_ANON_KEY: ${{secrets.SUPABASE_ANON_KEY}}
         run: npm ci && npm run build
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@ac8041b3b04337509168113bf98b95879df22322
