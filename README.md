@@ -1,30 +1,72 @@
-# React + TypeScript + Vite
+# react-ts-degital-meishi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![main](/docs/images/main.jpg)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## サービス説明
 
-## Expanding the ESLint configuration
+デジタル名刺 は勉強会などで自己紹介や好きな技術、github アカウントなどを気軽に登録・閲覧できるシンプルな Web アプリケーションです。
+登録したデータは登録翌日の朝６時（日本時間）に自動的に削除されます。
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 主な使用技術
 
-- Configure the top-level `parserOptions` property like this:
+Frontend:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- react@18.3.1
+- react-hook-form@7.51.5
+- react-router-dom@6.23.1
+- typescript@5.4.5
+- @chakra-ui/react@2.8.2
+- chakra-react-select@4.8.0
+- react-icons@5.2.1
+- vite@5.2.12
+
+Backend/DB:
+
+- Supabase
+
+Test：
+
+- jest@29.7.0
+- @testing-library/react@15.0.7
+
+CI/CD：
+
+- Github Actions
+
+Deploy:
+
+- Firebase Hosting
+
+## 環境設定
+
+1. env ファイルをコピー
+
+```bash
+$ cp .env.template .env
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## build
+
+```bash
+$ npm run build
+```
+
+## アプリ起動
+
+```bash
+$ npm run dev
+```
+
+## deploy
+
+```bash
+$ make deploy
+```
+
+## test
+
+```bash
+$ make test
+```
